@@ -8,6 +8,10 @@ public class Pisti{
         Card[] deck=new Card[52];
         deck=createDeck();
         for(int i=0;i<deck.length;i++){
+            System.out.println(deck[i].getSymbol()+"-"+deck[i].getNumber());
+        }
+        deck=shuffleDeck(deck);
+        for(int i=0;i<deck.length;i++){
             System.out.println(deck[i].getSymbol()+""+deck[i].getNumber());
         }
 
@@ -32,4 +36,32 @@ public class Pisti{
     }
     return deck;
 }
+    public static Card[] shuffleDeck(Card[] deck){
+        Random rd=new Random(System.currentTimeMillis());
+        Card[] shfDeck=new Card[52];
+        int[] arr=new int[52];
+        boolean go=false;
+        for(int i=0;i<52;i++){
+            go=false;
+            shfDeck[i]=new Card();
+            int slctCard=rd.nextInt(52);
+            arr[i]=slctCard;
+            for(int j=0;j<i;j++){
+                if(arr[j]==slctCard){
+                    go=true;
+                }
+            }
+            if(go){
+                i--;
+                continue;
+            }
+              else{
+                char a=deck[slctCard].getSymbol();
+                String b=deck[slctCard].getNumber();
+            shfDeck[i].setSymbol(a);
+            shfDeck[i].setNumber(b);
+        }
+    }
+    return shfDeck;
+  }
 }
