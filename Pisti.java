@@ -14,6 +14,11 @@ public class Pisti{
         for(int i=0;i<deck.length;i++){
             System.out.println(deck[i].getSymbol()+""+deck[i].getNumber());
         }
+        System.out.println("-");
+        deck=cutDeck(deck);
+        for(int i=0;i<deck.length;i++){
+            System.out.println(deck[i].getSymbol()+""+deck[i].getNumber());
+        }
 
 
         
@@ -63,5 +68,26 @@ public class Pisti{
         }
     }
     return shfDeck;
+  }
+  public static Card[] cutDeck(Card[] deck){
+    Card[] cutDeck=new Card[52];
+    for (int i=0;i<52;i++){
+        cutDeck[i]=new Card();
+    }
+    for (int i=0;i<52;i++){
+        if(i<26){
+            char a=deck[i].getSymbol();
+            String b=deck[i].getNumber();
+            cutDeck[i+26].setSymbol(a);
+            cutDeck[i+26].setNumber(b);
+        }
+         else{ 
+            char a=deck[i].getSymbol();
+            String b=deck[i].getNumber();
+            cutDeck[i-26].setSymbol(a);  
+            cutDeck[i-26].setNumber(b);
+         }
+    }
+    return cutDeck;
   }
 }
