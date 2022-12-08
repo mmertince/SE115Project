@@ -95,7 +95,26 @@ public class Pisti{
 
 
   public static Card[] dealingCard(Card[] deck){
-    
+    Card[] dealedCards=new Card[4];
+    for(int i=0;i<4;i++){
+        dealedCards[i]=new Card();
+        char a=deck[i].getSymbol();
+        String b=deck[i].getNumber();
+        dealedCards[i].setSymbol(a);
+        dealedCards[i].setNumber(b); 
+    }
+    return dealedCards;
+}
+  public static Card[] newDeck(Card[] deck){
+    Card[] newDeck=new Card[deck.length-4];
+    for(int i=4;i<deck.length;i++){
+        newDeck[i-4]=new Card();
+        char a=deck[i].getSymbol();
+        String b=deck[i].getNumber();
+        newDeck[i-4].setSymbol(a);
+        newDeck[i-4].setNumber(b);
+    }
+    return newDeck;
   }
 
 
