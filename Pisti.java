@@ -69,6 +69,8 @@ public class Pisti{
     }
     return shfDeck;
   }
+
+
   public static Card[] cutDeck(Card[] deck){
     Card[] cutDeck=new Card[52];
     for (int i=0;i<52;i++){
@@ -90,4 +92,11 @@ public class Pisti{
     }
     return cutDeck;
   }
+
+
+  public static Card[] dealingCard(Card[] deck){
+    
+  }
+
+
 }
