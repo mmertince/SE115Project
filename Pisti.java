@@ -8,10 +8,13 @@ public class Pisti{
         Card[] deck=new Card[52];
         Card[] computerTook=new Card[52];
         Card[] playerTook=new Card[52];
+        for(int i=0;i<playerTook.length;i++){
+            playerTook[i]=new Card();
+        }
         Card[] computerHand=new Card[4];
         Card[] playerHand=new Card[4];
-        Card[] floorCards=new Card[4];
-        deck=createDeck();
+        Card[] floorCards=new Card[52];
+        /*deck=createDeck();
         for(int i=0;i<deck.length;i++){
             System.out.println(deck[i].getSymbol()+"-"+deck[i].getNumber());
         }
@@ -23,19 +26,50 @@ public class Pisti{
         deck=cutDeck(deck);
         for(int i=0;i<deck.length;i++){
             System.out.println(deck[i].getSymbol()+""+deck[i].getNumber());
-        }
+        }*/
+
+        //game starts here
+        deck=createDeck();
+        deck=shuffleDeck(deck);
+        deck=cutDeck(deck);
+        boolean round=true;
+        boolean game=true;
+        boolean reDealToFloor=false;
+        floorCards=dealingCard(deck);
+        deck=newDeck(deck);
+        while(game){
+            computerHand=dealingCard(deck);
+            deck=newDeck(deck);
+            playerHand=dealingCard(deck);
+            deck=newDeck(deck);
+            if(reDealToFloor){
+                floorCards=dealingCard(deck);
+                deck=newDeck(deck);
+            }
+            round=true;
+            while(round){
+                System.out.println("players turn");
+                PlayersTurn(playerHand, floorCards,playerTook,reDealToFloor);
+                computerAI(computerHand, floorCards);
+
+                
+
+
+
 
 
         
+        }
+      }
     }
 
     //creates deck
      public static Card[] createDeck(){
             Card[] deck=new Card[52];
-        char[] suits={'s','c','h','d'};
+        String[] suits={"s","c","h","d"};
         for (int i=0;i<4;i++){
             for(int j=0;j<13;j++){
-                char temp=suits[i];
+                String temp=suits[i];
                 deck[i*13+j]=new Card();
                 deck[i*13+j].setSymbol(temp);
                 int temp2=j+1;
@@ -70,7 +104,7 @@ public class Pisti{
                 continue;
             }
               else{
-                char a=deck[slctCard].getSymbol();
+                String a=deck[slctCard].getSymbol();
                 String b=deck[slctCard].getNumber();
                 shfDeck[i].setSymbol(a);
                 shfDeck[i].setNumber(b);
@@ -87,13 +121,13 @@ public class Pisti{
     }
     for (int i=0;i<52;i++){
         if(i<26){
-            char a=deck[i].getSymbol();
+            String a=deck[i].getSymbol();
             String b=deck[i].getNumber();
             cutDeck[i+26].setSymbol(a);
             cutDeck[i+26].setNumber(b);
         }
            else{ 
-              char a=deck[i].getSymbol();
+              String a=deck[i].getSymbol();
               String b=deck[i].getNumber();
               cutDeck[i-26].setSymbol(a);  
               cutDeck[i-26].setNumber(b);
@@ -107,7 +141,7 @@ public class Pisti{
     Card[] dealedCards=new Card[4];
     for(int i=0;i<4;i++){
         dealedCards[i]=new Card();
-        char a=deck[i].getSymbol();
+        String a=deck[i].getSymbol();
         String b=deck[i].getNumber();
         dealedCards[i].setSymbol(a);
         dealedCards[i].setNumber(b); 
@@ -120,7 +154,7 @@ public class Pisti{
     Card[] newDeck=new Card[deck.length-4];
     for(int i=4;i<deck.length;i++){
         newDeck[i-4]=new Card();
-        char a=deck[i].getSymbol();
+        String a=deck[i].getSymbol();
         String b=deck[i].getNumber();
         newDeck[i-4].setSymbol(a);
         newDeck[i-4].setNumber(b);
@@ -130,8 +164,8 @@ public class Pisti{
 
   //adds the cart which is thrown by the player to the floor cards
   public static Card[] addFloorDeck(Card[] floorCards,Card thrownCard){
-    Card[] newFloorCards=new Card[floorCards.length+1];
-    char a=new char;
+    Card[] newFloorCards=new Card[floorCards.length];
+    String a=new String();
     String b=new String();
     for(int i=0;i<newFloorCards.length;i++){
         newFloorCards[i]=new Card();
@@ -160,7 +194,7 @@ public class Pisti{
 
         if(playerCards[3]==thrownCard){
             for (int i=0;i<3;i++){
-                char a=playerCards[i].getSymbol();
+                String a=playerCards[i].getSymbol();
                 String b=playerCards[i].getNumber();
                 updPlayerCards[i].setSymbol(a);
                 updPlayerCards[i].setNumber(b);
@@ -169,7 +203,7 @@ public class Pisti{
 
          else if(playerCards[0]==thrownCard){
             for (int i=1;i<4;i++){
-                char a=playerCards[i].getSymbol();
+                String a=playerCards[i].getSymbol();
                 String b=playerCards[i].getNumber();
                 updPlayerCards[i-1].setSymbol(a);
                 updPlayerCards[i-1].setNumber(b);
@@ -177,12 +211,12 @@ public class Pisti{
         }
 
          else if(playerCards[1]==thrownCard){
-            char a1=playerCards[0].getSymbol();
+            String a1=playerCards[0].getSymbol();
             String b1=playerCards[0].getNumber();
             updPlayerCards[0].setSymbol(a1);
             updPlayerCards[0].setNumber(b1);
             for (int i=2;i<4;i++){
-                char a=playerCards[i].getSymbol();
+                String a=playerCards[i].getSymbol();
                 String b=playerCards[i].getNumber();
                 updPlayerCards[i-1].setSymbol(a);
                 updPlayerCards[i-1].setNumber(b);
@@ -190,12 +224,12 @@ public class Pisti{
         }
 
         else if(playerCards[2]==thrownCard){
-            char a1=playerCards[3].getSymbol();
+            String a1=playerCards[3].getSymbol();
             String b1=playerCards[3].getNumber();
             updPlayerCards[2].setSymbol(a1);
             updPlayerCards[2].setNumber(b1);
             for (int i=0;i<2;i++){
-                char a=playerCards[i].getSymbol();
+                String a=playerCards[i].getSymbol();
                 String b=playerCards[i].getNumber();
                 updPlayerCards[i].setSymbol(a);
                 updPlayerCards[i].setNumber(b);
@@ -212,18 +246,18 @@ public class Pisti{
     
      for(int i=0;i<floorCards.length;i++){
         newPlayerTook[i]=new Card();
-        char a=floorCards[i].getSymbol(0);
-        String b=floorCards[i].getNumber(null);
+        String a=floorCards[i].getSymbol();
+        String b=floorCards[i].getNumber();
         newPlayerTook[i].setSymbol(a);
         newPlayerTook[i].setNumber(b);
      }
 
      for(int i=floorCards.length;i<newPlayerTook.length;i++){
         newPlayerTook[i]=new Card();
-        char  a=playerTook[i-floorCards.length].getSymbol;
-        String b=playerTook[i-floorCards.length].getNumber;
-        newPlayerTook.setSymbol=a;
-        newPlayerTook.setNumber=b;
+        String  a=playerTook[i-floorCards.length].getSymbol();
+        String b=playerTook[i-floorCards.length].getNumber();
+        newPlayerTook[i].setSymbol(a);
+        newPlayerTook[i].setNumber(b);
 
      }
 
@@ -232,7 +266,8 @@ public class Pisti{
   }
 
   //smart playing for computer
-  public static void ComputerAI(Card[] computerHand,Card[] floorCards){
+  public static void computerAI(Card[] computerHand,Card[] floorCards){
+    Random rd=new Random(System.currentTimeMillis());
     for(int i=0;i<floorCards.length;i++){
         if (computerHand[i].getNumber()==floorCards[0].getNumber()){
             int determineCard=i;
@@ -240,9 +275,49 @@ public class Pisti{
             updatePlayerCards(computerHand,computerHand[determineCard]);
             collectCars(floorCards, computerHand);
         }
+         else{
+            int newdetermineCard=rd.nextInt(computerHand.length);
+            addFloorDeck(floorCards,computerHand[newdetermineCard]);
+            updatePlayerCards(computerHand,computerHand[newdetermineCard]);
+         }
     }
 
-  } 
+  }
+  
+  
+//game flow in players turn
+  public static void PlayersTurn(Card[] playerHand,Card[] floorCards,Card[] playerTook,boolean reDealToFloor){
+    Scanner sc=new Scanner(System.in);
+    String a=new String();
+    String b=new String();
+    System.out.println("your cards are ");
+    for(int i=0;i<playerHand.length;i++){
+        a=playerHand[i].getSymbol();
+        b=playerHand[i].getNumber();
+        System.out.println(i+1+" "+a+b);
+  }
+    System.out.println("please pick a card from numbers in the left");
+    String picknumber=sc.nextLine();
+    boolean check=true;
+    int pickedcartno=0;
+    while(check){
+     for (int i=1;i<=4;i++){
+        if(Integer.parseInt(picknumber)==i){
+            pickedcartno=i;
+            check=false;
+        }
+    }
+     if (check){
+        System.out.println("please enter only 1,2,3 or 4");
+    }
+  }
+  floorCards=addFloorDeck(floorCards,playerHand[pickedcartno-1]);
+  playerHand=updatePlayerCards(playerHand,playerHand[pickedcartno-1]);
+  if(floorCards[0].getNumber()==floorCards[1].getNumber()){
+    playerTook=collectCars(floorCards, playerTook);
+    reDealToFloor=true;
+  }
+}
 
 
 
