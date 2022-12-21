@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Pisti{
+   
     public static void main(String[] args) { 
         Scanner sc=new Scanner(System.in);
         Random rd=new Random(System.currentTimeMillis());
@@ -14,8 +15,8 @@ public class Pisti{
         Card[] computerHand=new Card[4];
         Card[] playerHand=new Card[4];
         Card[] floorCards=new Card[52];
-        /*deck=createDeck();
-        for(int i=0;i<deck.length;i++){
+        deck=createDeck();
+        /*for(int i=0;i<deck.length;i++){
             System.out.println(deck[i].getSymbol()+"-"+deck[i].getNumber());
         }
         deck=shuffleDeck(deck);
@@ -26,31 +27,87 @@ public class Pisti{
         deck=cutDeck(deck);
         for(int i=0;i<deck.length;i++){
             System.out.println(deck[i].getSymbol()+""+deck[i].getNumber());
-        }*/
+        }
+        */
 
-        //game starts here
+        //deck preparing
         deck=createDeck();
         deck=shuffleDeck(deck);
         deck=cutDeck(deck);
+
+        //System.arraycopy(shuffleDeck(deck), 0, deck, 0, deck.length);
+        //System.arraycopy(cutDeck(deck), 0, deck, 0, deck.length);
+        
         boolean round=true;
         boolean game=true;
         boolean reDealToFloor=false;
+
+        //making the floor cards and reseting deck
         floorCards=dealingCard(deck);
         deck=newDeck(deck);
+        for(Card a:deck){
+        System.out.println(a.getSymbol()+a.getNumber());
+        }
+        //game starts here for player
         while(game){
+          /* 
+            System.arraycopy(dealingCard(deck),0,computerHand,0,dealingCard(deck).length);
+            System.arraycopy(newDeck(deck),0,deck,0,newDeck(deck).length);
+            System.arraycopy(dealingCard(deck),0,playerHand,0,dealingCard(deck).length);
+            System.arraycopy(newDeck(deck),0,deck,0,newDeck(deck).length);*/
             computerHand=dealingCard(deck);
             deck=newDeck(deck);
             playerHand=dealingCard(deck);
             deck=newDeck(deck);
+            
             if(reDealToFloor){
                 floorCards=dealingCard(deck);
                 deck=newDeck(deck);
             }
+            System.out.println("new round");
             round=true;
             while(round){
+                System.out.println("floor cards are");
+                for(Card display : floorCards){
+                    System.out.println(display.getSymbol()+display.getNumber());
+                }
                 System.out.println("players turn");
-                PlayersTurn(playerHand, floorCards,playerTook,reDealToFloor);
+                
+                System.out.println("your cards are ");
+                for(int i=0;i<playerHand.length;i++){
+                  if(playerHand[i]!=null){
+                    System.out.println(i+1+" "+playerHand[i].getSymbol()+playerHand[i].getNumber());
+                  }
+                }
+            
+                System.out.println("please pick a card from numbers in the left");
+                String picknumber=sc.nextLine();
+                boolean check=true;
+                int pickedcartno=0;
+                while(check){
+                 for (int j=1;j<=4;j++){
+                    if(Integer.parseInt(picknumber)==j){
+                        pickedcartno=j;
+                        check=false;
+                    }
+                }
+                 if (check){
+                    System.out.println("please enter only 1,2,3 or 4");
+                }
+              }
+              playerHand=updatePlayerCards(playerHand,playerHand[pickedcartno-1]);
+
+              if(floorCards[0].getNumber()==floorCards[1].getNumber()){
+                playerTook=collectCars(floorCards, playerTook);
+                reDealToFloor=true;
+              }
+
+
+
                 computerAI(computerHand, floorCards);
+                if(playerHand[0]==null&&computerHand[0]==null){
+                    round=false;
+                }
 
                 
 
@@ -60,8 +117,11 @@ public class Pisti{
 
         
         }
+       }
       }
-    }
+       
+     
+    
 
     //creates deck
      public static Card[] createDeck(){
@@ -188,53 +248,29 @@ public class Pisti{
   // removes the thrown card from players hand
   public static Card[] updatePlayerCards(Card[] playerCards,Card thrownCard){
     Card[] updPlayerCards=new Card[playerCards.length-1];
+
     for (int i=0;i<updPlayerCards.length;i++){
-        updPlayerCards[i]=new Card();
+          updPlayerCards[i]=new Card();
     }
 
-        if(playerCards[3]==thrownCard){
-            for (int i=0;i<3;i++){
-                String a=playerCards[i].getSymbol();
-                String b=playerCards[i].getNumber();
-                updPlayerCards[i].setSymbol(a);
-                updPlayerCards[i].setNumber(b);
-            }
+    for(int i=0;i<updPlayerCards.length;i++){
+        if(playerCards[i].getNumber()==thrownCard.getNumber()&&playerCards[i].getSymbol()==thrownCard.getSymbol()){
+          for(int j=i;j<updPlayerCards.length;j++){
+            updPlayerCards[j].setNumber(playerCards[j+1].getNumber());
+            updPlayerCards[j].setSymbol(playerCards[j+1].getSymbol());
+            
+          }
+          break;
         }
+          else{
+            updPlayerCards[i].setSymbol(playerCards[i].getSymbol());
+            updPlayerCards[i].setNumber(playerCards[i].getNumber());
+          }
+      }
 
-         else if(playerCards[0]==thrownCard){
-            for (int i=1;i<4;i++){
-                String a=playerCards[i].getSymbol();
-                String b=playerCards[i].getNumber();
-                updPlayerCards[i-1].setSymbol(a);
-                updPlayerCards[i-1].setNumber(b);
-            }
-        }
 
-         else if(playerCards[1]==thrownCard){
-            String a1=playerCards[0].getSymbol();
-            String b1=playerCards[0].getNumber();
-            updPlayerCards[0].setSymbol(a1);
-            updPlayerCards[0].setNumber(b1);
-            for (int i=2;i<4;i++){
-                String a=playerCards[i].getSymbol();
-                String b=playerCards[i].getNumber();
-                updPlayerCards[i-1].setSymbol(a);
-                updPlayerCards[i-1].setNumber(b);
-            }
-        }
-
-        else if(playerCards[2]==thrownCard){
-            String a1=playerCards[3].getSymbol();
-            String b1=playerCards[3].getNumber();
-            updPlayerCards[2].setSymbol(a1);
-            updPlayerCards[2].setNumber(b1);
-            for (int i=0;i<2;i++){
-                String a=playerCards[i].getSymbol();
-                String b=playerCards[i].getNumber();
-                updPlayerCards[i].setSymbol(a);
-                updPlayerCards[i].setNumber(b);
-            }
-        }
+     
+       
         return updPlayerCards;
           
 
@@ -292,9 +328,11 @@ public class Pisti{
     String b=new String();
     System.out.println("your cards are ");
     for(int i=0;i<playerHand.length;i++){
+      if(playerHand[i]!=null){
         a=playerHand[i].getSymbol();
         b=playerHand[i].getNumber();
         System.out.println(i+1+" "+a+b);
+      }
   }
     System.out.println("please pick a card from numbers in the left");
     String picknumber=sc.nextLine();
@@ -313,6 +351,7 @@ public class Pisti{
   }
   floorCards=addFloorDeck(floorCards,playerHand[pickedcartno-1]);
   playerHand=updatePlayerCards(playerHand,playerHand[pickedcartno-1]);
+  counter++;
   if(floorCards[0].getNumber()==floorCards[1].getNumber()){
     playerTook=collectCars(floorCards, playerTook);
     reDealToFloor=true;
