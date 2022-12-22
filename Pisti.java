@@ -27,6 +27,7 @@ public class Pisti{
         boolean round=true;
         boolean game=true;
         boolean reDealToFloor=false;
+        boolean playerHandLacked=true;
 
         //making the floor cards and reseting deck
         floorCards=dealingCard(deck);
@@ -36,11 +37,12 @@ public class Pisti{
         }
         //game starts here for player
         while(game){
-         
+         if(playerHandLacked){
             computerHand=dealingCard(deck);
             deck=newDeck(deck);
             playerHand=dealingCard(deck);
             deck=newDeck(deck);
+         }
             
             if(reDealToFloor){
                 floorCards=dealingCard(deck);
@@ -49,10 +51,12 @@ public class Pisti{
             System.out.println("new round");
             round=true;
             while(round){
+              playerHandLacked=false;
                 System.out.println("floor cards are");
                 for(Card display : floorCards){
                     System.out.println(display.getSymbol()+display.getNumber());
                 }
+
                 System.out.println("players turn");
                 
                 System.out.println("your cards are ");
@@ -81,19 +85,27 @@ public class Pisti{
               playerHand=updatePlayerCards(playerHand,playerHand[pickedcartno-1]);
               
 
-              if(floorCards[0].getNumber()==floorCards[1].getNumber()){
+              if(floorCards[0].getNumber().equals(floorCards[1].getNumber())){
                 playerTook=collectCars(floorCards, playerTook);
+                floorCards=emptyArr(floorCards);
                 reDealToFloor=true;
+                round=false;
+                continue;
               }
 
-
+              System.out.println("computers cards are");
+              for(int i=0;i<computerHand.length;i++){
+                  System.out.println(i+1+" "+computerHand[i].getSymbol()+computerHand[i].getNumber());
+                }
+              
 
                int computersChoice=computerAI(computerHand, floorCards);
-               addFloorDeck(floorCards,computerHand[computersChoice]);
-               updatePlayerCards(computerHand,computerHand[computersChoice]);
-               //collectCars(floorCards,computerHand);
-                if(playerHand.length==0){
+               System.out.println(computersChoice);
+               floorCards=addFloorDeck(floorCards,computerHand[computersChoice]);
+               computerHand=updatePlayerCards(computerHand,computerHand[computersChoice]);
+                if(playerHand.length==0&&computerHand.length==0){
                     round=false;
+                    playerHandLacked=true;
                 }
 
                 
@@ -312,43 +324,15 @@ public class Pisti{
   }
   
   
-//game flow in players turn
- /*  public static void PlayersTurn(Card[] playerHand,Card[] floorCards,Card[] playerTook,boolean reDealToFloor){
-    Scanner sc=new Scanner(System.in);
-    String a=new String();
-    String b=new String();
-    System.out.println("your cards are ");
-    for(int i=0;i<playerHand.length;i++){
-      if(playerHand[i]!=null){
-        a=playerHand[i].getSymbol();
-        b=playerHand[i].getNumber();
-        System.out.println(i+1+" "+a+b);
-      }
-  }
-    System.out.println("please pick a card from numbers in the left");
-    String picknumber=sc.nextLine();
-    boolean check=true;
-    int pickedcartno=0;
-    while(check){
-     for (int i=1;i<=4;i++){
-        if(Integer.parseInt(picknumber)==i){
-            pickedcartno=i;
-            check=false;
-        }
-    }
-     if (check){
-        System.out.println("please enter only 1,2,3 or 4");
-    }
-  }
-  floorCards=addFloorDeck(floorCards,playerHand[pickedcartno-1]);
-  playerHand=updatePlayerCards(playerHand,playerHand[pickedcartno-1]);
-  counter++;
-  if(floorCards[0].getNumber()==floorCards[1].getNumber()){
-    playerTook=collectCars(floorCards, playerTook);
-    reDealToFloor=true;
-  }
+//empty array
+public static Card[] emptyArr(Card[] cardArr){
+  Card[] emptyArrr=new Card[cardArr.length];
+   for(Card c:cardArr){
+    c=new Card();
+  } 
+  return emptyArrr;
+
 }
-*/
 
 
 
