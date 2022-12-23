@@ -13,6 +13,10 @@ public class Pisti{
         int computersChoice;
         int pistiPlayer=0;
         int pistiComputer=0;
+        int counterComputer=0;
+        int counterPlayer=0;
+        int computerPoints=0;
+        int playerPoints=0;
         for(int i=0;i<playerTook.length;i++){
             playerTook[i]=new Card();
         }
@@ -193,41 +197,54 @@ public class Pisti{
         }
        }
 
-       playerTook=collectCards(playerHand, playerTook);
-       computerTook=collectCards(computerHand, playerTook);
+          playerTook=collectCards(playerHand, playerTook);
+          computerTook=collectCards(computerHand, playerTook);
 
-       if(lastTaker=="player"){
-        playerTook=collectCards(floorCards, playerTook);
-        floorCards=emptyArr(floorCards);
-       }
-       else if(lastTaker=="computer"){
-        computerTook=collectCards(floorCards, computerTook);
-        floorCards=emptyArr(floorCards);
-       }
+          if(lastTaker=="player"){
+           playerTook=collectCards(floorCards, playerTook);
+           floorCards=emptyArr(floorCards);
+          }
+          else if(lastTaker=="computer"){
+           computerTook=collectCards(floorCards, computerTook);
+           floorCards=emptyArr(floorCards);
+          }
 
-       Hand playerTookHand= new Hand();
-       playerTookHand.setHand(playerTook);
-       Hand computerTookHand= new Hand();
-       computerTookHand.setHand(computerTook);
-       System.out.println("calculating points");
+          Hand playerTookHand= new Hand();
+          playerTookHand.setHand(playerTook);
+          Hand computerTookHand= new Hand();
+          computerTookHand.setHand(computerTook);
+          System.out.println("calculating points");
 
        for (Card card : computerTook) {
         if(card.getNumber()!=null){
+          counterComputer++;
         System.out.println(card.getSymbol()+card.getNumber());
       }
     }
        System.out.println("computer made "+pistiComputer+" pisti");
        for (Card card : playerTook) {
         if(card.getSymbol()!=null){
+          counterPlayer++;
         System.out.println(card.getSymbol()+card.getNumber());
       }
     }
        System.out.println("player made "+pistiPlayer+" pisti");
 
-
-
-       System.out.println("computer has "+ computerTookHand.sumPoints(pistiComputer));
-       System.out.println("player has "+ playerTookHand.sumPoints(pistiPlayer));
+       computerPoints=computerTookHand.sumPoints(pistiComputer);
+       playerPoints=playerTookHand.sumPoints(pistiPlayer);
+       if(counterComputer>counterPlayer){
+        System.out.println("computer has more cards addittional 3 points");
+        computerPoints+=3;
+       }
+         else if(counterPlayer>counterComputer){
+          System.out.println("player has more cards addittional 3 points");
+          playerPoints+=3;
+         }
+         else{
+          System.out.println("number of cards are equal for both players no addittional points");
+         }
+       System.out.println("computer has "+ computerPoints);
+       System.out.println("player has "+ playerPoints);
       }
        
      
