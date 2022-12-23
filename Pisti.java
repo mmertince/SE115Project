@@ -11,6 +11,8 @@ public class Pisti{
         Card[] playerTook=new Card[52];
         String lastTaker=new String();
         int computersChoice;
+        int pistiPlayer=0;
+        int pistiComputer=0;
         for(int i=0;i<playerTook.length;i++){
             playerTook[i]=new Card();
         }
@@ -102,10 +104,11 @@ public class Pisti{
               
 
               if(floorCards[0]!=null&&floorCards[1]!=null){
-              if(floorCards[0].getNumber().equals(floorCards[1].getNumber())){
-                //if(checkPisti(floorCards)){
-
-                //}
+              if(floorCards[0].getNumber().equals(floorCards[1].getNumber())||floorCards[0].getNumber()=="J"){
+                if(checkPisti(floorCards)){
+                  System.out.println("YOU MADE A PISTI");
+                  pistiPlayer++;
+                }
                 playerTook=collectCards(floorCards, playerTook);
                 floorCards=emptyArr(floorCards);
                 lastTaker="player";
@@ -136,15 +139,21 @@ public class Pisti{
               
 
                 if(floorCards[0]!=null){
-                computersChoice=computerAI(computerHand, floorCards);
+                computersChoice=computerAI(computerHand, floorCards[0]);
                 }
                 else{
                   computersChoice=rd.nextInt(computerHand.length);
                 }
                System.out.println(computersChoice);
                floorCards=addFloorDeck(floorCards,computerHand[computersChoice]);
+               computerHand=updatePlayerCards(computerHand,computerHand[computersChoice]);
                if(floorCards[0]!=null&&floorCards[1]!=null){
-                if(floorCards[0].getNumber().equals(floorCards[1].getNumber())){
+                if(floorCards[0].getNumber().equals(floorCards[1].getNumber())||floorCards[0].getNumber()=="J"){
+                  if(checkPisti(floorCards)){
+                    System.out.println("COMPUTER MADE A PISTI");
+                    pistiComputer++;
+                  }
+                
                  computerTook=collectCards(floorCards, playerTook);
                  floorCards=emptyArr(floorCards);
                  lastTaker="computer";
@@ -166,7 +175,7 @@ public class Pisti{
               }*/
 
               
-               computerHand=updatePlayerCards(computerHand,computerHand[computersChoice]);
+               //computerHand=updatePlayerCards(computerHand,computerHand[computersChoice]);
                 if(playerHand.length==0&&computerHand.length==0){
                     round=false;
                     playerHandLacked=true;
@@ -201,8 +210,24 @@ public class Pisti{
        Hand computerTookHand= new Hand();
        computerTookHand.setHand(computerTook);
        System.out.println("calculating points");
-       System.out.println("computer has "+ computerTookHand.sumPoints());
-       System.out.println("player has "+ playerTookHand.sumPoints());
+
+       for (Card card : computerTook) {
+        if(card.getNumber()!=null){
+        System.out.println(card.getSymbol()+card.getNumber());
+      }
+    }
+       System.out.println("computer made "+pistiComputer+" pisti");
+       for (Card card : playerTook) {
+        if(card.getSymbol()!=null){
+        System.out.println(card.getSymbol()+card.getNumber());
+      }
+    }
+       System.out.println("player made "+pistiPlayer+" pisti");
+
+
+
+       System.out.println("computer has "+ computerTookHand.sumPoints(pistiComputer));
+       System.out.println("player has "+ playerTookHand.sumPoints(pistiPlayer));
       }
        
      
@@ -224,16 +249,19 @@ public class Pisti{
                   deck[i*13+j].setValue(1);
                 }else if(j==10){
                   deck[i*13+j].setNumber("J");
-                  deck[i*13+j].setValue(3);
+                  deck[i*13+j].setValue(1);
                 }else if(j==11){
                   deck[i*13+j].setNumber("Q");
                   deck[i*13+j].setValue(1);
                 }else if(j==12){
                   deck[i*13+j].setNumber("K");
                   deck[i*13+j].setValue(1);
-                }else if(j==2){
+                }else if(j==1){
                   deck[i*13+j].setNumber(String.valueOf(2));
                   deck[i*13+j].setValue(2);
+                }else if(j==9){
+                  deck[i*13+j].setNumber(String.valueOf(10));
+                  deck[i*13+j].setValue(3);
                 }else{ 
                   deck[i*13+j].setNumber(String.valueOf(temp2));
                   deck[i*13+j].setValue(1);
@@ -444,11 +472,11 @@ public class Pisti{
   }
 
   //smart playing for computer
-  public static int computerAI(Card[] computerHand,Card[] floorCards){
+  public static int computerAI(Card[] computerHand,Card floorCards){
     Random rd=new Random(System.currentTimeMillis());
     int determineCard=0;
     for(int i=0;i<computerHand.length;i++){
-        if (computerHand[i].getNumber()==floorCards[0].getNumber()){
+        if (computerHand[i].getNumber().equals(floorCards.getNumber())){
             determineCard=i;
            
         }
@@ -476,10 +504,12 @@ public static Card[] emptyArr(Card[] cardArr){
 //checks pisti
 
 public static boolean checkPisti(Card[] floorCards){
-  if (floorCards.length==2){return true;}
+  while(floorCards[1]!=null&&floorCards[2]==null){
+  if (floorCards[0].getNumber().equals(floorCards[1].getNumber())){
+    return true;}
   else{return false;}
-}
+  }
+  return false;
 
-
-
+  }
 }
