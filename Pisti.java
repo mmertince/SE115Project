@@ -17,6 +17,7 @@ public class Pisti{
         int counterPlayer=0;
         int computerPoints=0;
         int playerPoints=0;
+        int pickedcartno=0;
         for(int i=0;i<playerTook.length;i++){
             playerTook[i]=new Card();
         }
@@ -36,6 +37,8 @@ public class Pisti{
         boolean game=true;
         boolean reDealToFloor=true;
         boolean playerHandLacked=true;
+        boolean tryCatch=true;
+        String picknumber=new String();
 
         //making the floor cards and reseting deck
        // floorCards=dealingCard(deck);
@@ -69,6 +72,7 @@ public class Pisti{
 
 
               playerHandLacked=false;
+              tryCatch=true;
               if(floorCards.length>0&&floorCards!=null){
                 System.out.println("floor cards are");
                 for(Card display : floorCards){
@@ -88,9 +92,18 @@ public class Pisti{
                 }
             
                 System.out.println("please pick a card from numbers in the left");
-                String picknumber=sc.nextLine();
+                while(tryCatch){
+                  picknumber=sc.nextLine();
+                try {
+                Integer.parseInt(picknumber);
+                tryCatch=false;
+                } catch(Exception ex){
+                  System.err.println("please enter a valid value");
+                  continue;
+                }
+            
                 boolean check=true;
-                int pickedcartno=0;
+                pickedcartno=0;
                 while(check){
                  for (int j=1;j<=playerHand.length;j++){
                     if(Integer.parseInt(picknumber)==j){
@@ -100,9 +113,11 @@ public class Pisti{
                 }
                  if (check){
                     System.out.println("please enter valid number");
-                    continue;
+                    check=false;
+                    tryCatch=true;
                 }
               }
+            }
               floorCards=addFloorDeck(floorCards,playerHand[pickedcartno-1]);
               playerHand=updatePlayerCards(playerHand,playerHand[pickedcartno-1]);
               
