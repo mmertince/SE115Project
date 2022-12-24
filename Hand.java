@@ -5,8 +5,10 @@ public class Hand{
     public int sumPoints(int pisti){
     int sum=0;
     for (Card c : Hand) {
+      if(c!=null){
       sum+=c.getValue();     
     }
+  }
     for(int i=0;i<pisti;i++){
       sum+=10;
     }

@@ -118,10 +118,12 @@ public class Pisti{
                 lastTaker="player";
                 System.out.println("player took");
                 for (Card card : playerTook) {
+                  if(card!=null){
                   if(card.getSymbol()!=null){
                   System.out.println(card.getSymbol()+card.getNumber());
                 }
               }
+            }
                 //reDealToFloor=true;
                 //round=false;
                 //continue;
@@ -158,15 +160,18 @@ public class Pisti{
                     pistiComputer++;
                   }
                 
-                 computerTook=collectCards(floorCards, playerTook);
+                 computerTook=collectCards(floorCards, computerTook);
                  floorCards=emptyArr(floorCards);
                  lastTaker="computer";
                  System.out.println("computer took");
                  for (Card card : computerTook) {
+                  if(card!=null){
                    if(card.getNumber()!=null){
                    System.out.println(card.getSymbol()+card.getNumber());
                  }
-               }
+                }
+               
+              }
               }
                 //reDealToFloor=true;
                 //round=false;
@@ -198,7 +203,7 @@ public class Pisti{
        }
 
           playerTook=collectCards(playerHand, playerTook);
-          computerTook=collectCards(computerHand, playerTook);
+          computerTook=collectCards(computerHand, computerTook);
 
           if(lastTaker=="player"){
            playerTook=collectCards(floorCards, playerTook);
@@ -216,17 +221,21 @@ public class Pisti{
           System.out.println("calculating points");
 
        for (Card card : computerTook) {
+        if(card!=null){
         if(card.getNumber()!=null){
           counterComputer++;
         System.out.println(card.getSymbol()+card.getNumber());
       }
     }
+    }
        System.out.println("computer made "+pistiComputer+" pisti");
        for (Card card : playerTook) {
+        if(card!=null){
         if(card.getSymbol()!=null){
           counterPlayer++;
         System.out.println(card.getSymbol()+card.getNumber());
       }
+    }
     }
        System.out.println("player made "+pistiPlayer+" pisti");
 
@@ -456,28 +465,39 @@ public class Pisti{
 
   //adds cart which are taken to the players inventory to count score
    public static Card[] collectCards(Card[] floorCards,Card[] playerTook ){
-    Card[] newPlayerTook=new Card[playerTook.length+floorCards.length];
+    Card[] newPlayerTook=new Card[52];
     for(int i=0;i<52;i++){
       newPlayerTook[i]=new Card();
     }
+    int counter1=0;
+    int counter2=0;
+    for(int i=0;i<floorCards.length;i++){
+      if(floorCards[i]!=null){
+        counter1++;
+      }
+    }
+    for(int i=0;i<playerTook.length;i++){
+      if(playerTook[i]!=null){
+        counter2++;
+      }
+    }
     
-     for(int i=0;i<floorCards.length;i++){
+    
+     for(int i=0;i<counter1;i++){
         //newPlayerTook[i]=new Card();
-        if(floorCards[i]!=null){
         String a=floorCards[i].getSymbol();
         String b=floorCards[i].getNumber();
         int c=floorCards[i].getValue();
         newPlayerTook[i].setSymbol(a);
         newPlayerTook[i].setNumber(b);
         newPlayerTook[i].setValue(c);
-     }
     }
 
-     for(int i=floorCards.length;i<newPlayerTook.length;i++){
+     for(int i=counter1;i<counter2;i++){
         newPlayerTook[i]=new Card();
-        String  a=playerTook[i-floorCards.length].getSymbol();
-        String b=playerTook[i-floorCards.length].getNumber();
-        int c=playerTook[i-floorCards.length].getValue();
+        String  a=playerTook[i-counter1].getSymbol();
+        String b=playerTook[i-counter1].getNumber();
+        int c=playerTook[i-counter1].getValue();
         newPlayerTook[i].setSymbol(a);
         newPlayerTook[i].setNumber(b);
         newPlayerTook[i].setValue(c);
@@ -495,7 +515,7 @@ public class Pisti{
     for(int i=0;i<computerHand.length;i++){
         if (computerHand[i].getNumber().equals(floorCards.getNumber())){
             determineCard=i;
-           
+           break;
         }
          else{
             determineCard=rd.nextInt(computerHand.length);
