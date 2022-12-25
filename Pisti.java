@@ -1,4 +1,7 @@
 import java.util.Scanner;
+
+import javax.sql.rowset.spi.SyncResolver;
+
 import java.util.Random;
 
 public class Pisti{
@@ -18,6 +21,7 @@ public class Pisti{
         int computerPoints=0;
         int playerPoints=0;
         int pickedcartno=0;
+        int numFloorCards=0;
         for(int i=0;i<playerTook.length;i++){
             playerTook[i]=new Card();
         }
@@ -40,18 +44,10 @@ public class Pisti{
         boolean tryCatch=true;
         String picknumber=new String();
 
-        //making the floor cards and reseting deck
-       // floorCards=dealingCard(deck);
-       // deck=newDeck(deck);
-       
-        //game starts here for player
+
+        System.out.println("GAME STARTED!!!");
         while(game){
-        /*  if(playerHandLacked){
-            computerHand=dealingCard(deck);
-            deck=newDeck(deck);
-            playerHand=dealingCard(deck);
-            deck=newDeck(deck);
-         } */
+ 
          if(deck.length==0){break;}
             
              if(reDealToFloor){
@@ -73,21 +69,39 @@ public class Pisti{
 
               playerHandLacked=false;
               tryCatch=true;
-              if(floorCards.length>0&&floorCards!=null){
-                System.out.println("floor cards are");
-                for(Card display : floorCards){
-                  if(display!=null){
-                    System.out.println(display.getSymbol()+display.getNumber());
-                  }
+              //
+              
+              for(int i=0;i<6;i++){
+                System.out.println("");
+                for(int j=0;j<12;j++){
+                  System.out.print("-");
                 }
               }
-
-                System.out.println("players turn");
+              System.out.println("");
+              //
+              if(floorCards.length>0&&floorCards[0]!=null){
+                //System.out.println("floor cards are");
+                System.out.println("");
+                System.out.print("last card on the floor is :");
+                numFloorCards=0;
+              for(Card display : floorCards){
+                  if(display!=null){
+                     numFloorCards++;
+                  }
+                }
+              
+                System.out.print(floorCards[0].getSymbol()+"-"+floorCards[0].getNumber());
+              }
+              System.out.println("");
+              System.out.println("floor has "+numFloorCards+" card");
+                System.out.println("");
+                System.out.println("PLAYERS TURN");
+                System.out.println("");
                 
-                System.out.println("your cards are ");
+                System.out.println("your cards are :");
                 for(int i=0;i<playerHand.length;i++){
                   if(playerHand[i].getSymbol()!=null){
-                    System.out.println(i+1+" "+playerHand[i].getSymbol()+playerHand[i].getNumber());
+                    System.out.println(i+1+" "+playerHand[i].getSymbol()+"-"+playerHand[i].getNumber());
                   }
                 }
             
@@ -99,6 +113,13 @@ public class Pisti{
                 tryCatch=false;
                 } catch(Exception ex){
                   System.err.println("please enter a valid value");
+                  System.err.println("");
+                  System.err.println("your cards are :");
+                  for(int i=0;i<playerHand.length;i++){
+                    if(playerHand[i].getSymbol()!=null){
+                      System.err.println(i+1+" "+playerHand[i].getSymbol()+"-"+playerHand[i].getNumber());
+                    }
+                  }
                   continue;
                 }
             
@@ -131,33 +152,27 @@ public class Pisti{
                 playerTook=collectCards(floorCards, playerTook);
                 floorCards=emptyArr(floorCards);
                 lastTaker="player";
-                System.out.println("player took");
-                for (Card card : playerTook) {
+                System.out.println("PLAYER TOOK THE CARDS");
+                /*for (Card card : playerTook) {
                   if(card!=null){
                   if(card.getSymbol()!=null){
                   System.out.println(card.getSymbol()+card.getNumber());
                 }
               }
-            }
-                //reDealToFloor=true;
-                //round=false;
-                //continue;
+            }*/
+                
               }
             }
 
-              /*if((reDealToFloor)&&(deck.length!=0)){
-                floorCards=dealingCard(deck);
-                deck=newDeck(deck);
-                reDealToFloor=false;
-              } */
+          
 
           
 
-              System.out.println("computers cards are");
+              /*System.out.println("computers cards are");
               for(int i=0;i<computerHand.length;i++){
                   System.out.println(i+1+" "+computerHand[i].getSymbol()+computerHand[i].getNumber());
                 }
-              
+              */
 
                 if(floorCards[0]!=null){
                 computersChoice=computerAI(computerHand, floorCards[0]);
@@ -165,7 +180,8 @@ public class Pisti{
                 else{
                   computersChoice=rd.nextInt(computerHand.length);
                 }
-               System.out.println(computersChoice);
+          
+               System.out.println("computer choose :"+computerHand[computersChoice].getSymbol()+"-"+computerHand[computersChoice].getNumber());
                floorCards=addFloorDeck(floorCards,computerHand[computersChoice]);
                computerHand=updatePlayerCards(computerHand,computerHand[computersChoice]);
                if(floorCards[0]!=null&&floorCards[1]!=null){
@@ -178,28 +194,22 @@ public class Pisti{
                  computerTook=collectCards(floorCards, computerTook);
                  floorCards=emptyArr(floorCards);
                  lastTaker="computer";
-                 System.out.println("computer took");
-                 for (Card card : computerTook) {
+                 System.out.println("");
+                 System.out.println("COMPUTER TOOK THE CARDS");
+                 numFloorCards=0;
+                 /*for (Card card : computerTook) {
                   if(card!=null){
                    if(card.getNumber()!=null){
                    System.out.println(card.getSymbol()+card.getNumber());
                  }
                 }
                
+              }*/ 
               }
-              }
-                //reDealToFloor=true;
-                //round=false;
+               
                 
               }
-              /*if(reDealToFloor&&deck.length!=0){
-                floorCards=dealingCard(deck);
-                deck=newDeck(deck);
-                reDealToFloor=false;
-              }*/
-
-              
-               //computerHand=updatePlayerCards(computerHand,computerHand[computersChoice]);
+    
                 if(playerHand.length==0&&computerHand.length==0){
                     round=false;
                     playerHandLacked=true;
@@ -216,6 +226,16 @@ public class Pisti{
         
         }
        }
+//game ended
+    for(int i=0;i<4;i++){
+      System.out.println("");
+      for(int j=0;j<12;j++){
+        System.out.print("-");
+      }
+    }
+       System.out.println("");
+       System.out.println("GAME HAS ENDED");
+       System.out.println("");
 
           playerTook=collectCards(playerHand, playerTook);
           computerTook=collectCards(computerHand, computerTook);
@@ -223,18 +243,22 @@ public class Pisti{
           if(lastTaker=="player"){
            playerTook=collectCards(floorCards, playerTook);
            floorCards=emptyArr(floorCards);
+           System.out.println("player took the last cards so the remaining cards will go to the player");
           }
           else if(lastTaker=="computer"){
            computerTook=collectCards(floorCards, computerTook);
            floorCards=emptyArr(floorCards);
+           System.out.println("computer took the last cards so the remaining cards will go to the computer");
           }
+          System.out.println("");
 
           Hand playerTookHand= new Hand();
           playerTookHand.setHand(playerTook);
           Hand computerTookHand= new Hand();
           computerTookHand.setHand(computerTook);
-          System.out.println("calculating points");
-
+          System.out.println("CALCULATING POINTS");
+       System.out.println("");
+       System.out.println("cards that computer took :");
        for (Card card : computerTook) {
         if(card!=null){
         if(card.getNumber()!=null){
@@ -243,7 +267,10 @@ public class Pisti{
       }
     }
     }
+       System.out.println("");
        System.out.println("computer made "+pistiComputer+" pisti");
+       System.out.println("");
+       System.out.println("cards that player took :");
        for (Card card : playerTook) {
         if(card!=null){
         if(card.getSymbol()!=null){
@@ -252,7 +279,9 @@ public class Pisti{
       }
     }
     }
+       System.out.println("");
        System.out.println("player made "+pistiPlayer+" pisti");
+       System.out.println("");
 
        computerPoints=computerTookHand.sumPoints(pistiComputer);
        playerPoints=playerTookHand.sumPoints(pistiPlayer);
@@ -267,9 +296,44 @@ public class Pisti{
          else{
           System.out.println("number of cards are equal for both players no addittional points");
          }
+         System.out.println("");
+
+        /*  System.out.println("player took");
+         for (Card card : playerTook) {
+           if(card!=null){
+           if(card.getSymbol()!=null){
+           System.out.println(card.getSymbol()+card.getNumber());
+         }
+       }
+     }
+     */
+     System.out.println("");
+  /*    for (Card card : computerTook) {
+      if(card!=null){
+       if(card.getNumber()!=null){
+       System.out.println(card.getSymbol()+card.getNumber());
+     }
+    }
+   
+  }*/
+
+       System.out.println("");
        System.out.println("computer has "+ computerPoints);
+       System.out.println("");
        System.out.println("player has "+ playerPoints);
+
+       System.out.println("");
+       if(computerPoints>playerPoints){
+        System.out.println("COMPUTER HAS WON THE GAME");
+       }
+         else if(playerPoints>computerPoints){
+          System.out.println("CONGRATS YOU WIN");
+         }else{
+          System.out.println("POINTS ARE EVEN ");
+         }
+          
       }
+
        
      
     
