@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 import javax.sql.rowset.spi.SyncResolver;
+import javax.xml.transform.Templates;
 
 import java.util.Random;
 import java.nio.file.Paths;
@@ -10,6 +11,28 @@ import java.util.Formatter;
 public class Pisti{
    
     public static void main(String[] args) { 
+      Scanner shower=null;
+      System.out.println("HIGH SCORE LIST");
+      System.out.println("");
+      int kount=0;
+      String[] showerString=new String[2];
+    try{
+      shower=new Scanner(Paths.get("highScoreList.txt"));
+         while(shower.hasNextLine()){
+          
+          kount++;
+          showerString=shower.nextLine().split("-");
+          if(showerString.length!=1){
+           System.out.printf("%02d%s%s%s-%s\n",kount," <> ",showerString[0], " points ",showerString[1]);
+          }
+       }
+      }
+      catch(IOException l){
+        l.printStackTrace();
+      }
+       finally{shower.close();}
+      System.out.println("");
+         
         Scanner sc=new Scanner(System.in);
         Scanner reader=null;
         User Player=new User();
@@ -328,7 +351,7 @@ public class Pisti{
          Player.setUser(playerName);
          Player.setUserPoints(playerPoints);
          int counting=0;
-         User[] pointList=new User[11];
+         User[] pointList=new User[10];//11
          String[] tempList=new String[2];
          try{
           reader=new Scanner(Paths.get("highScoreList.txt"));
@@ -337,18 +360,23 @@ public class Pisti{
            //try{
             while(reader.hasNextLine()){
               try{
+                if(counting<10){
             pointList[counting]=new User();
             tempList=reader.nextLine().split("-");
-            
+                
+           
             if(tempList!=null){
+              if(tempList.length!=1){
               if(tempList[1]!=null){
             pointList[counting].setUser(tempList[1]);
             pointList[counting].setUserPoints(Integer.parseInt(tempList[0]));
             counting++;
-            System.out.println(tempList[0]+tempList[0]);
+              }
             }
           }
           }
+          }
+        
         
            catch(Exception exc){
             exc.printStackTrace();
@@ -377,17 +405,17 @@ public class Pisti{
               pointList[i].setUser(playerName);
               pointList[i].setUserPoints(playerPoints);
               break;
-            } else if(pointList[10]!=null){
-               if(pointList[10].getUserPoints()<playerPoints){
-                pointList[10].setUserPoints(playerPoints);
-                pointList[10].setUser(playerName);
+            } else if(pointList[9]!=null){
+               if(pointList[9].getUserPoints()<playerPoints){
+                pointList[9].setUserPoints(playerPoints);
+                pointList[9].setUser(playerName);
                }
             }
            }
 
-           for(int i=0;i<10;i++){
+           for(int i=0;i<9;i++){
             if(pointList[i]!=null){//&&pointList[i+1]!=null){
-              for(int j=i;j<11;j++){
+              for(int j=i;j<10;j++){
                  if(pointList[j]!=null){
                   if(pointList[i].getUserPoints()<pointList[j].getUserPoints()){
                    tempUser.setUser(pointList[i].getUser());
@@ -412,9 +440,7 @@ public class Pisti{
 
         Formatter f=null;
         for(User uk:pointList){
-          if(uk!=null){
-        System.out.println(uk.getUser()+uk.getUserPoints());
-          }
+       
           int counter3=0;
 
         try {
@@ -422,6 +448,7 @@ public class Pisti{
           for(User u:pointList){
             if(u!=null){
               if(u.getUser()!=null){
+                counter3++;
           f.format("%d%s%s\n",u.getUserPoints(),"-",u.getUser());
                 }
             }
@@ -432,6 +459,32 @@ public class Pisti{
             f.close();
           }
         }
+
+        System.out.println("");
+        System.out.println("NEW HIGH SCORE LIST");
+
+        Scanner shower2=null;
+        String[] showerString2=new String[2];
+        int kount2=0;
+        try{
+            shower2=new Scanner(Paths.get("highScoreList.txt"));
+             while(shower2.hasNextLine()){
+              try{
+                kount2++;
+                showerString2=shower2.nextLine().split("-");
+                if(showerString2.length!=1){
+               System.out.printf("%02d%s%s%s-%s\n",kount2," <> ",showerString2[0], " points ",showerString2[1]);
+              }
+            }
+                catch(Exception ok){
+                  ok.printStackTrace();
+                }
+           }
+          }
+          catch(IOException l){
+            l.printStackTrace();
+          }
+           finally{shower2.close();}
         
   
       sc.close();
@@ -439,6 +492,7 @@ public class Pisti{
 
           
       }
+
 
        
      
