@@ -3,11 +3,16 @@ import java.util.Scanner;
 import javax.sql.rowset.spi.SyncResolver;
 
 import java.util.Random;
+import java.nio.file.Paths;
+import java.io.IOException;
+import java.util.Formatter;
 
 public class Pisti{
    
     public static void main(String[] args) { 
         Scanner sc=new Scanner(System.in);
+        Scanner reader=null;
+        User Player=new User();
         Random rd=new Random(System.currentTimeMillis());
         Card[] deck=new Card[52];
         Card[] computerTook=new Card[52];
@@ -28,7 +33,10 @@ public class Pisti{
         Card[] computerHand=new Card[4];
         Card[] playerHand=new Card[4];
         Card[] floorCards=new Card[52];
-        deck=createDeck();
+        
+
+        System.out.println("PLEASE ENTER YOUR NAME");
+        String playerName=sc.nextLine();
     
 
         //deck preparing
@@ -298,24 +306,9 @@ public class Pisti{
          }
          System.out.println("");
 
-        /*  System.out.println("player took");
-         for (Card card : playerTook) {
-           if(card!=null){
-           if(card.getSymbol()!=null){
-           System.out.println(card.getSymbol()+card.getNumber());
-         }
-       }
-     }
-     */
+ 
      System.out.println("");
-  /*    for (Card card : computerTook) {
-      if(card!=null){
-       if(card.getNumber()!=null){
-       System.out.println(card.getSymbol()+card.getNumber());
-     }
-    }
-   
-  }*/
+
 
        System.out.println("");
        System.out.println("computer has "+ computerPoints);
@@ -331,6 +324,119 @@ public class Pisti{
          }else{
           System.out.println("POINTS ARE EVEN ");
          }
+
+         Player.setUser(playerName);
+         Player.setUserPoints(playerPoints);
+         int counting=0;
+         User[] pointList=new User[11];
+         String[] tempList=new String[2];
+         try{
+          reader=new Scanner(Paths.get("highScoreList.txt"));
+          //Scanner reader2=new Scanner(Paths.get("highScoreList.txt"));
+           //while(counting<10){
+           //try{
+            while(reader.hasNextLine()){
+              try{
+            pointList[counting]=new User();
+            tempList=reader.nextLine().split("-");
+            
+            if(tempList!=null){
+              if(tempList[1]!=null){
+            pointList[counting].setUser(tempList[1]);
+            pointList[counting].setUserPoints(Integer.parseInt(tempList[0]));
+            counting++;
+            System.out.println(tempList[0]+tempList[0]);
+            }
+          }
+          }
+        
+           catch(Exception exc){
+            exc.printStackTrace();
+           }
+          }
+        }
+         
+         
+           catch(IOException e){
+            e.printStackTrace();
+           }
+           finally{
+            if(reader!=null){
+              reader.close();
+            }
+           }
+           
+           User tempUser=new User();
+           int sortting=0;
+
+           boolean sorting=true;
+
+           for(int i=0;i<pointList.length;i++){
+            if(pointList[i]==null){
+              pointList[i]=new User();
+              pointList[i].setUser(playerName);
+              pointList[i].setUserPoints(playerPoints);
+              break;
+            } else if(pointList[10]!=null){
+               if(pointList[10].getUserPoints()<playerPoints){
+                pointList[10].setUserPoints(playerPoints);
+                pointList[10].setUser(playerName);
+               }
+            }
+           }
+
+           for(int i=0;i<10;i++){
+            if(pointList[i]!=null){//&&pointList[i+1]!=null){
+              for(int j=i;j<11;j++){
+                 if(pointList[j]!=null){
+                  if(pointList[i].getUserPoints()<pointList[j].getUserPoints()){
+                   tempUser.setUser(pointList[i].getUser());
+                   tempUser.setUserPoints(pointList[i].getUserPoints());
+                   pointList[i].setUser(pointList[j].getUser());
+                   pointList[i].setUserPoints(pointList[j].getUserPoints());
+                   pointList[j].setUser(tempUser.getUser());
+                   pointList[j].setUserPoints(tempUser.getUserPoints());
+                }
+              }
+            }
+           }
+          }
+        
+        
+          /*else if(i==0){
+            pointList[0]=new User();
+            pointList[0].setUser(Player.getUser());
+            pointList[0].setUserPoints(Player.getUserPoints());
+          }*/
+        
+
+        Formatter f=null;
+        for(User uk:pointList){
+          if(uk!=null){
+        System.out.println(uk.getUser()+uk.getUserPoints());
+          }
+          int counter3=0;
+
+        try {
+          f = new Formatter("highScoreList.txt");
+          for(User u:pointList){
+            if(u!=null){
+              if(u.getUser()!=null){
+          f.format("%d%s%s\n",u.getUserPoints(),"-",u.getUser());
+                }
+            }
+          }
+          }
+        catch(Exception e){}
+          finally{
+            f.close();
+          }
+        }
+        
+  
+      sc.close();
+
+
           
       }
 
