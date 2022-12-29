@@ -7,10 +7,19 @@ import java.util.Random;
 import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.Formatter;
+import java.io.File;
 
 public class Pisti{
-   
     public static void main(String[] args) { 
+      try{
+      File file=new File("highScoreList.txt");
+       if(!file.exists()){
+        file.createNewFile();
+       }
+      }
+       catch(IOException X){
+        X.printStackTrace();
+       }
       Scanner shower=null;
       System.out.println("HIGH SCORE LIST");
       System.out.println("");
